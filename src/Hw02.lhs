@@ -77,24 +77,24 @@ that your definitions work as intended.
 --   append [1,2,3] [5,2] = [1,2,3,5,2]
 
 > append            :: [a] -> [a] -> [a]
-> append [] ys      = ...
-> append (x:xs) ys  = ... (append xs ys) ...
+> append [] ys      = ys
+> append (x:xs) ys  = x : (append xs ys)
 
 -- addup xs returns the sum of the numbers in
 -- the list xs.  For example:
 --   addup [1,2,3] = 6
 
 > addup            :: [Int] -> Int
-> addup []          = ...
-> addup (x:xs)      = ... (addup xs) ...
+> addup []          = 0
+> addup (x:xs)      = x + (addup xs)
 
 -- rev xs returns the list of values in xs in
 -- reverse order.  For example:
 --   rev [1,2,3] = [3,2,1]
 
 > rev       :: [Int] -> [Int]
-> rev []     = ...
-> rev (x:xs) = ... (rev xs) ...
+> rev []     = []
+> rev (x:xs) = (rev xs) ++ [x]
 
 -- insert n ns inserts the integer n into the list
 -- of integers ns.  You can assume that the numbers
@@ -108,10 +108,10 @@ that your definitions work as intended.
 -- to eliminate duplicate elements from the list.
 
 > insert         :: Int -> [Int] -> [Int]
-> insert x []     = ...
+> insert x []     = [x]
 > insert x (y:ys)
->           | ... = ... (insert x ys) ...
->           | ... = ...
+>           | x > y = y : (insert x ys)
+>           | x <= y = x : y : ys
 
 -- sort ns returns a sorted version of the list ns.
 -- For example:
@@ -144,6 +144,14 @@ Suppose that n :: Int; explaining how you arrive at your answer,
 explain what result you will get from the following expression.
 
   sum [ x - y | x <- [1..n], y <- [1..n] ]
+
+  ret = []
+  for (x = 1.. n) {
+    for (y = 1..n) {
+      ret.append(x - y)
+    }
+  }
+  ret
 
 Verify your answer by evaluating this expression for some specific
 values of n.
