@@ -62,4 +62,8 @@ sort (n:ns) = insert n (sort ns)
 
 splits       :: [Int] -> [([Int], Int, [Int])]
 splits [x]    = [ ( [], x, [])]
-splits (x:xs) = ... : [ ... | (us, v, ws) <- splits xs ]
+splits (x:xs) = ([], x, xs) : [ (x : us, v, ws) | (us, v, ws) <- splits xs ]
+
+scheck  :: [Int] -> [([Int], Int, [Int])] -> Bool
+scheck (n:ns) [(us, v, ws)] = (us ++ [v] ++ ws) == (n:ns)
+scheck (n:ns) ((us, v, ws):xs) = ((us ++ [v] ++ ws) == (n:ns)) && (scheck (n:ns) xs)

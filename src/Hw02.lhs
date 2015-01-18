@@ -133,8 +133,8 @@ that your definitions work as intended.
 --                      ([0,1], 2, []) ]
 
 > splits       :: [Int] -> [([Int], Int, [Int])]
-> splits [x]    = ...
-> splits (x:xs) = ... : [ ... | (us, v, ws) <- splits xs ]
+> splits [x]    = [ ([], x, []) ]
+> splits (x:xs) = ([], x, xs) : [ (x : us, v, ws) | (us, v, ws) <- splits xs ]
 
 
 Question 4:
