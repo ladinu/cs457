@@ -2,8 +2,8 @@
 CS457/557 Functional Languages                              Homework 2
 ----------------------------------------------------------------------
 
-Name of programmer:
-Email to send comments to:
+Name of programmer: Ladinu Chandrasinghe
+Email to send comments to: ladinu@gmail.com
 
 
 Due at the start of class on January 19.  You are welcome to work on this
@@ -41,10 +41,22 @@ explain why you think the expression is ill-typed):
  Above expression has type [[[[[[Bool]]]]]]
 
  g) [ [True], [[]], [[[]]], [[[[]]]], [[[[[]]]]] ]
+ This is ill-typed because the type of above expression should be
+ a list that contain list of bools. Only one element of the above
+ list satisfy the type list of list of bools.
+
  h) map map
+ map map :: [a -> b] -> [[a] -> [b]]
+
  i) map (map odd)
+ map (map odd) :: Integral a => [[a]] -> [[Bool]]
+
  j) map . map
+ map . map :: (a -> b) -> [[a] -> [b]]
+
  k) (map , map)
+ (map, map) :: ((a -> b) -> [a] -> [b], (a1 -> b1) -> [a1] -> [b1])
+
 
 
 Question 2:
@@ -52,12 +64,33 @@ Question 2:
 -----------
 Explain what each of the following functions does:
  a) odd . (1+)
+ The above expresion is a function that takes an integer i, add 1
+ to i and see if the resulting integer is odd
+
  b) odd . (2*)
+ This is a function that always return False. By definition 2*n is always
+ even. So the above function cannot return True.
+
  c) ([1..]!!)
+ When given an index, the above function return effectively index + 1.
+ The !! return the element in the infinite list which start from 1.
+ Hence ([1..]!!) 0 = 1. For indexes that are negative, it causes an
+ exception.
+
  d) (!!0)
+ The function always return the first element of a list. If the list
+ is empty, it return an exception.
+
  e) reverse . reverse
+ Given a list to the above function, it simply returns the original list
+
  f) reverse . tail . reverse
+ Given a list the above function returns the same list without the last
+ element. It should invoke an exception if called on the empty list
+ because ther is no tail of an empty list.
+
  g) map reverse . reverse . map reverse
+ The function reverse a list of lists.
 
  
 Question 3:
@@ -151,7 +184,7 @@ explain what result you will get from the following expression.
       ret.append(x - y)
     }
   }
-  ret
+  sum ret
 
 Verify your answer by evaluating this expression for some specific
 values of n.
