@@ -178,6 +178,8 @@ explain what result you will get from the following expression.
 
   sum [ x - y | x <- [1..n], y <- [1..n] ]
 
+  The above expression is essentially the following pseudocode.
+
   ret = []
   for (x = 1.. n) {
     for (y = 1..n) {
@@ -185,6 +187,11 @@ explain what result you will get from the following expression.
     }
   }
   sum ret
+
+  The list contain numbers from 0..n and each number has a corresponding
+  negative number. So when you compute sum of the list, each number
+  cancel each other and is left with 0. Essentially the above function
+  compute 0.
 
 Verify your answer by evaluating this expression for some specific
 values of n.
