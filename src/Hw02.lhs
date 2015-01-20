@@ -156,8 +156,8 @@ that your definitions work as intended.
 -- ***insert***ion sort :-)
 
 > sort       :: [Int] -> [Int]
-> sort []     = ...
-> sort (n:ns) = ... (sort ns) ...
+> sort []     = []
+> sort (n:ns) = insert n (sort ns)
 
 -- splits ns returns the list of all triples (us, v, ws)
 -- such that us ++ [v] ++ ws == ns.  For example:
