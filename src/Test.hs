@@ -67,3 +67,20 @@ splits (x:xs) = ([], x, xs) : [ (x : us, v, ws) | (us, v, ws) <- splits xs ]
 scheck  :: [Int] -> [([Int], Int, [Int])] -> Bool
 scheck (n:ns) [(us, v, ws)] = (us ++ [v] ++ ws) == (n:ns)
 scheck (n:ns) ((us, v, ws):xs) = ((us ++ [v] ++ ws) == (n:ns)) && (scheck (n:ns) xs)
+
+data Bit = O | I deriving Show
+
+type BinNum = [Bit]
+
+toBinNum   :: Integer -> BinNum
+fromBinNum ::  BinNum -> Integer
+
+
+toBinNum n | n==0 = [O]
+           | even n = O : toBinNum(halfOfN)
+           | odd  n = I : tail (toBinNum (n - 1))
+             where halfOfN = n `div` 2
+
+fromBinNum []     = 0
+fromBinNum (O:ds) = 0 + (2 * fromBinNum ds)
+fromBinNum (I:ds) = 1 + (2 * fromBinNum ds)
