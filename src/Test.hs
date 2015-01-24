@@ -74,6 +74,7 @@ type BinNum = [Bit]
 
 toBinNum   :: Integer -> BinNum
 fromBinNum ::  BinNum -> Integer
+inc        ::  BinNum -> BinNum
 
 
 toBinNum n | n==0 = [O]
@@ -82,5 +83,11 @@ toBinNum n | n==0 = [O]
              where halfOfN = n `div` 2
 
 fromBinNum []     = 0
-fromBinNum (O:ds) = 0 + (2 * fromBinNum ds)
+fromBinNum (O:ds) = 2 * fromBinNum ds
 fromBinNum (I:ds) = 1 + (2 * fromBinNum ds)
+
+
+inc [I] = [O, I]
+inc (O:xs) = I : xs
+inc (I:xs) = O : inc xs
+
