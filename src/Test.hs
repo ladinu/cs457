@@ -73,8 +73,10 @@ data Bit = O | I deriving Show
 type BinNum = [Bit]
 
 toBinNum   :: Integer -> BinNum
-fromBinNum ::  BinNum -> Integer
-inc        ::  BinNum -> BinNum
+fromBinNum :: BinNum -> Integer
+inc        :: BinNum -> BinNum
+add        :: BinNum -> BinNum -> BinNum
+addr       :: BinNum -> BinNum -> BinNum
 
 
 toBinNum n | n==0 = [O]
@@ -91,3 +93,15 @@ inc [I] = [O, I]
 inc (O:xs) = I : xs
 inc (I:xs) = O : inc xs
 
+add []     ds     = ds
+add ds     []     = ds
+add (O:ds) (e:es) = e : add ds es
+add (I:ds) (O:es) = I : add ds es
+add (I:ds) (I:es) = O : add (add [I] ds) es
+
+addr x y = toBinNum (fromBinNum x + fromBinNum y)
+
+testAdd x y = fb (addr (tb x) (tb y)) == fb (add (tb x) (tb y))
+    where
+        tb = toBinNum
+        fb = fromBinNum
