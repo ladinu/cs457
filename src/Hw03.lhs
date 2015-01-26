@@ -41,14 +41,14 @@ a) Define functions:
    in any way, but if you are not sure where to start, then the
    following templates may give you some ideas:
 
-> toBinNum n | n==0   = ...
->            | even n = ...
->            | odd n  = ...
+> toBinNum n | n==0   = [O]
+>            | even n = O : toBinNum(halfOfN)
+>            | odd n  = I : tail (toBinNum (n - 1))
 >              where halfOfN = n `div` 2
 
-> fromBinNum []     = ...
-> fromBinNum (O:ds) = ...
-> fromBinNum (I:ds) = ...
+> fromBinNum []     = 0
+> fromBinNum (O:ds) = 2 * fromBinNum ds
+> fromBinNum (I:ds) = 1 + (2 * fromBinNum ds)
 
    If you prefer to approach these problems in a different way (for
    example, avoiding recursion), that's fine.
@@ -65,6 +65,10 @@ b) Define a BinNum increment function
    Hint: pattern matching and recursion should work together nicely
    for you here ...
 
+> inc [I] = [O, I]
+> inc (O:xs) = I : xs
+> inc (I:xs) = O : inc xs
+
 c) Define a function
 
 > add :: BinNum -> BinNum -> BinNum
@@ -79,11 +83,11 @@ c) Define a function
    matching on two arguments, together with a little bit of recursion.
    Something like the following might be a good start:
 
->  add []     ds     = ...
->  add ds     []     = ...
+>  add []     ds     = ds
+>  add ds     []     = ds
 >  add (O:ds) (e:es) = e : add ds es
->  add (I:ds) (O:es) = ...
->  add (I:ds) (I:es) = ...
+>  add (I:ds) (O:es) = I : add ds es
+>  add (I:ds) (I:es) = O : add (add [I] ds) es
 
    But this is not the only possible approach, so feel free to explore
    other options ...

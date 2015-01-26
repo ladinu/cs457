@@ -76,7 +76,9 @@ toBinNum   :: Integer -> BinNum
 fromBinNum :: BinNum -> Integer
 inc        :: BinNum -> BinNum
 add        :: BinNum -> BinNum -> BinNum
+mul        :: BinNum -> BinNum -> BinNum
 addr       :: BinNum -> BinNum -> BinNum
+mulr       :: BinNum -> BinNum -> BinNum
 
 
 toBinNum n | n==0 = [O]
@@ -99,8 +101,22 @@ add (O:ds) (e:es) = e : add ds es
 add (I:ds) (O:es) = I : add ds es
 add (I:ds) (I:es) = O : add (add [I] ds) es
 
+
+mul [] ds         = []
+mul ds []         = []
+mul (O:ds) (e:es) = e : mul ds es
+mul (I:ds) (O:es) = I : mul ds es
+mul (I:ds) (I:es) = I : mul ds es
+
+
+mulr x y = toBinNum (fromBinNum x * fromBinNum y)
 addr x y = toBinNum (fromBinNum x + fromBinNum y)
 
+testMul x y = fb (mulr (tb x) (tb y)) == fb (mul (tb x) (tb y))
+    where
+        tb = toBinNum
+        fb = fromBinNum
+        
 testAdd x y = fb (addr (tb x) (tb y)) == fb (add (tb x) (tb y))
     where
         tb = toBinNum
