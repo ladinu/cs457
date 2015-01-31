@@ -5,7 +5,7 @@ type Weight   = Double
 type Name     = String
 
 
-data LogEntry = Exercise     Name [(Rep, Weight)]
+data LogEntry = Exercise     Name [(Weight, Rep)]
               | RepExercise  Name [Rep]
               deriving (Show)
 
