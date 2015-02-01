@@ -65,14 +65,30 @@ getBeats xss  = map getBeat (concat xss)
 getDrumTrack row = (getPercussionSound (head row), getBeats (tail row))
 getDrumTracks = map getDrumTrack
 
+getTrackBeat (instr, [NoPlay]) = enr
+getTrackBeat (instr, [Play])   = perc instr en []
 
-rawText = "BassDrum1      |x_x_|____|x___|x___|x___|____|x___|____|\n\
+getTrackBeat (instr, (NoPlay:xs)) = enr :+: getTrackBeat (instr, xs)
+getTrackBeat (instr, (Play:xs))   = (perc instr en []) :+: getTrackBeat (instr, xs)
+
+getDrumMusic [trk] = getTrackBeat trk
+getDrumMusic (trk:trks) = (getTrackBeat trk) :=: (getDrumMusic trks)
+
+rawText = "BassDrum1      |x___|x___|x___|x___|x___|x___|x___|x___|\n\
        \   ElectricSnare  |____|____|____|____|____|____|____|____|\n\
-       \   ClosedHiHat    |____|xxx_|____|_xxx|__x_|____|____|____|\n\
-       \   OpenHiHat      |____|____|____|____|____|____|____|x___|\n\
-       \   HandClap       |____|____|____|____|____|____|____|____|\n\
-       \   Cowbell        |____|____|xx__|____|____|__xx|____|___x|\n\
-       \   HighTom        |____|____|____|____|____|____|____|__x_|\n\
+       \   OpenHiHat      |__x_|__x_|__x_|__x_|__x_|__x_|__x_|__x_|\n\
+       \   OpenHiHat      |____|____|____|____|____|____|____|____|\n\
+       \   HandClap       |____|x___|____|x___|____|x___|____|x___|\n\
+       \   Cowbell        |____|____|____|____|____|____|____|____|\n\
+       \   Cowbell        |____|____|____|____|____|____|____|____|\n\
        \   CrashCymbal1   |____|____|____|____|____|____|____|____|\n"
 
-pp = getDrumTracks . removeEmptyString . getList . parseDrumMachine
+
+pp = getDrumMusic . getDrumTracks . removeEmptyString . getList . parseDrumMachine
+
+
+
+cscale1 = c 4 qn [] :+: d 4 hn [] :+: e 4 hn [] :+:
+         f 4 qn [] :+: g 4 hn [] :+:  a 4 hn [] :+:
+         b 4 qn [] :+: c 4 hn []
+
