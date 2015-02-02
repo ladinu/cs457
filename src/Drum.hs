@@ -1,42 +1,8 @@
 module Drum where
 
-import Data.Text (pack, unpack, strip)
-import Text.ParserCombinators.Parsec
-
 import Music
-
-eol :: GenParser Char st Char
-eol = char '\n'
-
-drumMachine :: GenParser Char st [[String]]
-drumMachine =
-    do result <- many track
-       eof
-       return result
-
-track :: GenParser Char st [String]
-track =
-    do result <- beats
-       eol
-       return result
-
-beats :: GenParser Char st [String]
-beats =
-    do first <- isMarked
-       next  <- remainingBeats
-       return (first : next)
-
-remainingBeats :: GenParser Char st [String]
-remainingBeats =
-    (char '|' >> beats)
-    <|> (return [])
-
-isMarked :: GenParser Char st String
-isMarked =
-    many (noneOf "|\n")
-
-parseDrumMachine :: String -> Either ParseError [[String]]
-parseDrumMachine input = parse drumMachine "(unknown)" input
+import DrumMachineParser
+import Data.Text (pack, unpack, strip)
 
 -- Given a name of Percussion sound, return the haskore Percussion
 -- sound type
@@ -80,15 +46,9 @@ rawText = "BassDrum1      |x___|x___|x___|x___|x___|x___|x___|x___|\n\
        \   OpenHiHat      |____|____|____|____|____|____|____|____|\n\
        \   HandClap       |____|x___|____|x___|____|x___|____|x___|\n\
        \   Cowbell        |____|____|____|____|____|____|____|____|\n\
-       \   Cowbell        |____|____|____|____|____|____|____|____|\n\
        \   CrashCymbal1   |____|____|____|____|____|____|____|____|\n"
 
 
-pp = getDrumMusic . getDrumTracks . removeEmptyString . getList . parseDrumMachine
-
-
-
-cscale1 = c 4 qn [] :+: d 4 hn [] :+: e 4 hn [] :+:
-         f 4 qn [] :+: g 4 hn [] :+:  a 4 hn [] :+:
-         b 4 qn [] :+: c 4 hn []
+getDrumMachineMusic = getDrumMusic . getDrumTracks . removeEmptyString . getList . parseDrumMachine
+playDrumMachine machine = Tempo 4 (Instr "Percussion" (getDrumMachineMusic machine))
 
