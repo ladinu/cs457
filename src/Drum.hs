@@ -1,8 +1,52 @@
+-- Name of programmer: Ladinu Chandrasinghe
+-- Email to send comments to: ladinu@gmail.com
 module Drum where
 
 import Music
-import DrumMachineParser
+import Text.ParserCombinators.Parsec
 import Data.Text (pack, unpack, strip)
+
+import Text.ParserCombinators.Parsec
+
+-------------------------------------------------------------------------
+{-
+    I don't really know how Parsec works. But I followed the
+    examples on http://book.realworldhaskell.org/read/using-parsec.html
+    and adapted it to work with my own format
+-}
+eol :: GenParser Char st Char
+eol = char '\n'
+
+drumMachine :: GenParser Char st [[String]]
+drumMachine =
+    do result <- many track
+       eof
+       return result
+
+track :: GenParser Char st [String]
+track =
+    do result <- beats
+       eol
+       return result
+
+beats :: GenParser Char st [String]
+beats =
+    do first <- isMarked
+       next  <- remainingBeats
+       return (first : next)
+
+remainingBeats :: GenParser Char st [String]
+remainingBeats =
+    (char '|' >> beats)
+    <|> (return [])
+
+isMarked :: GenParser Char st String
+isMarked =
+    many (noneOf "|\n")
+
+parseDrumMachine :: String -> Either ParseError [[String]]
+parseDrumMachine input = parse drumMachine "(unknown)" input
+-------------------------------------------------------------------------
 
 -- Given a name of Percussion sound, return the haskore Percussion
 -- sound type
@@ -40,7 +84,7 @@ getTrackBeat (instr, (Play:xs))   = (perc instr en []) :+: getTrackBeat (instr, 
 getDrumMusic [trk] = getTrackBeat trk
 getDrumMusic (trk:trks) = (getTrackBeat trk) :=: (getDrumMusic trks)
 
-rawText = "BassDrum1      |x___|x___|x___|x___|x___|x___|x___|x___|\n\
+machine0 = "BassDrum1     |x___|x___|x___|x___|x___|x___|x___|x___|\n\
        \   ElectricSnare  |____|____|____|____|____|____|____|____|\n\
        \   OpenHiHat      |__x_|__x_|__x_|__x_|__x_|__x_|__x_|__x_|\n\
        \   OpenHiHat      |____|____|____|____|____|____|____|____|\n\
@@ -50,5 +94,11 @@ rawText = "BassDrum1      |x___|x___|x___|x___|x___|x___|x___|x___|\n\
 
 
 getDrumMachineMusic = getDrumMusic . getDrumTracks . removeEmptyString . getList . parseDrumMachine
-playDrumMachine machine = Tempo 4 (Instr "Percussion" (getDrumMachineMusic machine))
+
+{-
+    Given a ascii string which look like a drum machine, get the music it represent
+    For example:
+    drumMachineMusic rawText
+-}
+drumMachineMusic machine = Tempo 4 (Instr "Percussion" (getDrumMachineMusic machine))
 

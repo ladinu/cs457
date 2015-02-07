@@ -1,0 +1,88 @@
+Can you suggest suitable right hand sides to make valid laws
+for each of the left hand sides given below?
+
+Can you construct a simple example in each case to illustrate
+how the corresponding law works in practice?
+
+I've filled in the first law for you, and also pasted in an
+expression from a Hugs session that illustrates the law in 
+practice:
+
+Composition:
+------------
+
+1) f . id             = f
+
+Here's an example from Hugs with f = not
+
+  Hugs> (not . id) True  ==  not True
+  True
+  Hugs> 
+
+2) id . g             = g
+
+  Prelude> let g = not
+  Prelude> (id . g) True == g True
+  True
+  Prelude>
+
+
+3) f . (g  . h)       = (f . g) . h
+
+  Prelude> let f = (+1)
+  Prelude> let g = (+2)
+  Prelude> let h = (+3)
+  Prelude> (f . (g . h)) 0 == ((f . g) . h) 0
+  True
+  Prelude>
+
+Sections:
+---------
+
+4) (0+)               = id
+
+5) (n+) . (m+)        = ((n + m) +)
+
+6) (*n) . (*m)        = ((m *n) *)
+
+7) (xs++) . (ys++)    = ((xs ++ ys) ++)
+
+
+List processing:
+----------------
+
+8) (xs ++ ys) ++ zs   = xs ++ (ys ++ zs)
+
+9) xs ++ []           = xs || [] ++ xs
+
+10) length (zip xs ys) = max (length xs) (length ys)
+
+11) length . reverse   = length
+
+12) length . map f     = length
+
+13) length (xs ++ ys)  = (length xs) ++ (length ys)
+
+14) sum . map length   = length
+
+15) product . map product  =
+
+16) sum . map sum      =
+
+17) map f . reverse    =
+
+18) map f . map g      =
+
+19) map f xs ++ map f ys =
+
+20) map f . concat     =
+
+21) map f . filter (p . f) =
+
+22) concat . map concat =
+
+23) filter p . filter q =
+
+24) concat . map (filter p) =
+
+---- End!
