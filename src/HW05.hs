@@ -20,7 +20,7 @@ Prove:  map f x ++ map f y = map f (x ++ y)
 
 3) map f x ++ map f [] = map f (x ++ [])
 
-4) Assuming:    map f qs ++ map f vs = map f (qs ++ vs)
+4) Assuming:    map f ps ++ map f vs = map f (qs ++ vs)
    Prove:       map f (q:qs) ++ map f (v:vs) = map f ((q:qs) ++ (v:vs))
 
 5) map f bottom ++ map f bottom = map f (bottom ++ bottom)
@@ -37,6 +37,23 @@ Prove:  map f x ++ map f y = map f (x ++ y)
    [] ++ [] = []                          -->   (By using 1 twice)
    [] = []                                -->   (By 5)
 
-2)
+2) map f [] ++ map f y = map f ([] ++ y)
+
+   map f [] ++ map f y = map f y          -->   (By 3)
+   [] ++ map f y = map f y                -->   (By 1)
+   map f y = map f y                      -->   (By 3)
+
+3) map f x ++ map f [] = map f (x ++ [])
+
+   map f x ++ map f [] = map f x          -->   (By 4)
+   map f x ++ [] = map f x                -->   (By 1)
+   map f x = map f x                      -->   (By 4)
+
 
 -}
+-- Definitions and equations
+1 map f [] = []
+2 map f (x:xs) = (f x) : (map f xs)
+3 [] ++ x  = x
+4 x ++ []  = x
+5 [] ++ [] = []
