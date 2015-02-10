@@ -8,7 +8,7 @@ Prove:  map f x ++ map f y = map f (x ++ y)
 -- Definitions and equations
 1 map f [] = []
 2 map f (x:xs) = (f x) : (map f xs)
-3 (x:xs) ++ ys = x : (xs ++ ys)
+3 (x:xs) ++ ys = x : (xs ++ ys)             <-- Induction Hypothesis
 4 [] ++ xs = xs
 
 -- Must Prove
@@ -32,7 +32,8 @@ Prove:  map f x ++ map f y = map f (x ++ y)
 
    (f p) : (map f ps) ++ map f y = map f ((p:ps) ++ y)      -->   (By 2)
    (f p) : (map f ps ++ map f y) = map f ((p:ps) ++ y)      -->   (By 3)
-   (f p) : (map f ps ++ map f y) = map f ((p:ps) ++ y)      -->   (By 3)
+   map f (p : (ps ++ y)) = map f ((p:ps) ++ y)              -->   (By 2 using backwards substitution)
+   map f ((p:ps) ++ y)) = map f ((p:ps) ++ y)               -->   (By 3 using backwards substitution)
 
 3) map f bottom ++ map f y = map f (bottom ++ y)
 

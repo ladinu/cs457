@@ -68,7 +68,7 @@ scheck  :: [Int] -> [([Int], Int, [Int])] -> Bool
 scheck (n:ns) [(us, v, ws)] = (us ++ [v] ++ ws) == (n:ns)
 scheck (n:ns) ((us, v, ws):xs) = ((us ++ [v] ++ ws) == (n:ns)) && (scheck (n:ns) xs)
 
-data Bit = O | I deriving Show
+data Bit = O | I deriving (Show, Eq)
 
 type BinNum = [Bit]
 
@@ -102,11 +102,12 @@ add (I:ds) (O:es) = I : add ds es
 add (I:ds) (I:es) = O : add (add [I] ds) es
 
 
-mul [] ds         = []
-mul ds []         = []
-mul (O:ds) (e:es) = e : mul ds es
-mul (I:ds) (O:es) = I : mul ds es
-mul (I:ds) (I:es) = I : mul ds es
+mul [O] bs = [O]
+mul bs [O] = [O]
+mul as bs  = mull as bs [I]
+    where
+        mull xs ys count | count /= xs = add ys (mull xs ys (inc count))
+                         | otherwise = ys
 
 
 mulr x y = toBinNum (fromBinNum x * fromBinNum y)
@@ -116,7 +117,7 @@ testMul x y = fb (mulr (tb x) (tb y)) == fb (mul (tb x) (tb y))
     where
         tb = toBinNum
         fb = fromBinNum
-        
+
 testAdd x y = fb (addr (tb x) (tb y)) == fb (add (tb x) (tb y))
     where
         tb = toBinNum

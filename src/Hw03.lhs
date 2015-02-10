@@ -2,8 +2,8 @@
 CS457/557 Functional Languages                              Homework 3
 ----------------------------------------------------------------------
 
-Name of programmer:
-Email to send comments to:
+Name of programmer: Ladinu Chandrasinghe
+Email to send comments to: ladinu@gmail.com
 
 Due: At the start of class on January 26, 2015 on the class webct page.
 
@@ -105,5 +105,12 @@ d) Define a function:
    one for yourself. And don't forget that we've already defined some
    useful functions like inc and add for doing arithmetic on BinNum
    values; perhaps one of those will be useful to you here ...
+
+mul [O] bs = [O]
+mul bs [O] = [O]
+mul as bs  = mull as bs [I]
+    where
+        mull xs ys count | count /= xs = add ys (mull xs ys (inc count))
+                         | otherwise = ys
 
 ----------------------------------------------------------------------
