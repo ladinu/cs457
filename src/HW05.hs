@@ -11,8 +11,7 @@ Prove:  map f x ++ map f y = map f (x ++ y)
 3 (x:xs) ++ ys = x : (xs ++ ys)             <-- Induction Hypothesis
 4 [] ++ xs = xs
 
--- Must Prove
-
+-- Must prove following cases
 1) map f [] ++ map f y = map f ([] ++ y)
 
 2) Assuming:    map f ps ++ map f y = map f (ps ++ y)
@@ -41,10 +40,48 @@ Prove:  map f x ++ map f y = map f (x ++ y)
    bottom = bottom                     -->   (By pattern matching)
 
 
--}
+
+Prove:  length . reverse = length
+
 -- Definitions and equations
-1 map f [] = []
-2 map f (x:xs) = (f x) : (map f xs)
-3 [] ++ x  = x
-4 x ++ []  = x
-5 [] ++ [] = []
+5 (f . g) x = f(g x)
+6 length (x:xs) = 1 + length xs
+7 reverse [] = []
+8 reverse (x:xs) = reverse xs ++ [x]
+
+-- Lemma
+L1 length (xs ++ ys) = length xs + length ys         <-- TODO: prove this lemma
+
+-- Must prove following cases
+E(x) = (length . reverse) x = length x
+
+1) E([])                    (length . reverse) []       = length []
+
+2) Assuming:     E(zs)      (length . reverse) zs       = length zs
+   Prove:        E(z:zs)    (length . reverse) (z:zs)   = length (z:zs)
+
+3) E(bottom)                (length . reverse) bottom   = length bottom
+
+-- Proof
+1) (length . reverse) [] = length []
+
+   length (reverse []) = length []      -->     (By 5)
+   length [] = length []                -->     (By 7)
+
+2) Assuming:     (length . reverse) zs       = length zs
+   Prove:        (length . reverse) (z:zs)   = length (z:zs)
+
+   length (reverse (z:zs)) = length (z:zs)             -->     (By 5)
+   length (revese zs ++ [z]) = length (z:zs)           -->     (By 8)
+   length (revese zs) + length [z] = length (z:zs)     -->     (By L1)
+
+3) (length . reverse) bottom = length bottom
+
+   length (reverse bottom) = length bottom     -->     (By 5)
+   length bottom = length bottom               -->     (By patternmatching and strictness of reverse)
+
+-- Lemma L1
+
+length (xs ++ ys) = length xs + length ys
+
+-}
