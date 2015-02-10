@@ -106,4 +106,6 @@ length (xs ++ ys) = length xs + length ys
    1 + (length xs + length ys) = length (x:xs) + length ys -->     (By induction hypothesis)
    1 + (length xs) + length ys = length (x:xs) + length ys -->     (By associativity of +)
    length (x:xs) + length ys = length (x:xs) + length ys   -->     (By 6 backwards)
+   
+3) length (bottom ++ ys) = length bottom + length ys
 -}
