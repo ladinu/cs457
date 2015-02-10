@@ -48,8 +48,8 @@ Prove:  length . reverse = length
 6 length (x:xs) = 1 + length xs
 7 reverse [] = []
 8 reverse (x:xs) = reverse xs ++ [x]
-
--- Lemma
+9 lenghth [] = 0
+10 [] ++ xs = xs
 L1 length (xs ++ ys) = length xs + length ys         <-- TODO: prove this lemma
 
 -- Must prove following cases
@@ -84,4 +84,26 @@ E(x) = (length . reverse) x = length x
 
 length (xs ++ ys) = length xs + length ys
 
+
+-- Must prove following cases
+1) length ([] ++ ys) = length [] + length ys
+2) length ((x:xs) ++ ys) = length (x:xs) + length ys
+3) length (bottom ++ ys) = length bottom + length ys
+
+
+-- Proof
+
+1) length ([] ++ ys) = length [] + length ys
+
+   length ys = [] + length ys       -->     (By 10)
+   length ys = 0 + length ys        -->     (By 9)
+   length ys = length ys            -->     (By math)
+
+2) length ((x:xs) ++ ys) = length (x:xs) + length ys
+
+   length ( x : (xs ++ ys)) = length (x:xs) + length ys    -->     (By 3)
+   1 + length (xs ++ ys) = length (x:xs) + length ys       -->     (By 6)
+   1 + (length xs + length ys) = length (x:xs) + length ys -->     (By induction hypothesis)
+   1 + (length xs) + length ys = length (x:xs) + length ys -->     (By associativity of +)
+   length (x:xs) + length ys = length (x:xs) + length ys   -->     (By 6 backwards)
 -}
