@@ -114,19 +114,65 @@ length (xs ++ ys) = length xs + length ys
    1 + (length xs + length ys) = length (x:xs) + length ys -->     (By induction hypothesis)
    1 + (length xs) + length ys = length (x:xs) + length ys -->     (By associativity of +)
    length (x:xs) + length ys = length (x:xs) + length ys   -->     (By 6 backwards)
-   
+
 3) length (bottom ++ ys) = length bottom + length ys
 
    length bottom  = length bottom + length ys   -->      (By pattern matching)
    length bottom  = length bottom               -->      (By pattern matching)
 -}
 import Test.QuickCheck
+import Test.HUnit(Test(TestCase,TestList),assertEqual,runTestTT)
 
+-- Quick checks for law length . reverse  = length
 f :: [a] -> Int
 f = length . reverse
 
 prop1 :: [a] -> Bool
 prop1 xs = f xs == length xs
 
+-- HUnit tests for binary add
+data Bit = O | I deriving (Show, Eq)
+type BinNum = [Bit]
 
+{-  Original add
 
+    add :: BinNum -> BinNum -> BinNum
+    add []     ds     = ds
+    add ds     []     = ds
+    add (O:ds) (e:es) = e : add ds es
+    add (I:ds) (O:es) = I : add ds es
+    add (I:ds) (I:es) = O : add (add [I] ds) es
+-}
+
+-- Add implemented using a diffrent method
+inc :: BinNum -> BinNum
+inc [] = [I]
+inc [I] = [O, I]
+inc (O:xs) = I : xs
+inc (I:xs) = O : inc xs
+
+add2 :: BinNum -> BinNum -> BinNum
+add2 []     ds     = ds
+add2 ds     []     = ds
+add2 (O:ds) (e:es) = e : add2 ds es
+add2 (I:ds) (O:es) = I : add2 ds es
+add2 (I:ds) (I:es) = O : inc (add2 ds es)
+
+-- Unit tests for add2
+t0 = assertEqual "all args empty"                         []              (add2 [] [])
+t1 = assertEqual "first arg empty"                        [I, O]          (add2 [] [I, O])
+t2 = assertEqual "second arg empty"                       [I, O]          (add2 [I, O] [])
+t3 = assertEqual "add all zeros"                          [O]             (add2 [O] [O])
+t4 = assertEqual "add zeros"                              [I]             (add2 [I] [O])
+t5 = assertEqual "add 1 1"                                [O, I]          (add2 [I] [I])
+t6 = assertEqual "add 1 8"                                [I, O, O, I]    (add2 [I] [O, O, O, I])
+t7 = assertEqual "add leading zeros first arg"            [O, I, O, O]    (add2 [I, O, O, O] [I])
+t8 = assertEqual "add leading zeros second arg"           [I, O, O, O]    (add2 [O] [I, O, O, O])
+t9 = assertEqual "add leading zeros first and second arg" [O, I]          (add2 [I, O] [I, O])
+
+addTest = TestList[
+        TestCase t0, TestCase t1, TestCase t2, TestCase t3, TestCase t4,
+        TestCase t5, TestCase t6, TestCase t7, TestCase t8, TestCase t9
+        ]
+        
+tests = runTestTT (TestList[addTest])
