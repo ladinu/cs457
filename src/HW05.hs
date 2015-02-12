@@ -119,5 +119,14 @@ length (xs ++ ys) = length xs + length ys
 
    length bottom  = length bottom + length ys   -->      (By pattern matching)
    length bottom  = length bottom               -->      (By pattern matching)
-
 -}
+import Test.QuickCheck
+
+f :: [a] -> Int
+f = length . reverse
+
+prop1 :: [a] -> Bool
+prop1 xs = f xs == length xs
+
+
+
