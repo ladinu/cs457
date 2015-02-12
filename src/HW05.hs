@@ -50,7 +50,8 @@ Prove:  length . reverse = length
 8 reverse (x:xs) = reverse xs ++ [x]
 9 lenghth [] = 0
 10 [] ++ xs = xs
-L1 length (xs ++ ys) = length xs + length ys         <-- TODO: prove this lemma
+11 [x] = (x:[])
+L1 length (xs ++ ys) = length xs + length ys         (See proof below)
 
 -- Must prove following cases
 E(x) = (length . reverse) x = length x
@@ -71,9 +72,16 @@ E(x) = (length . reverse) x = length x
 2) Assuming:     (length . reverse) zs       = length zs
    Prove:        (length . reverse) (z:zs)   = length (z:zs)
 
-   length (reverse (z:zs)) = length (z:zs)             -->     (By 5)
-   length (revese zs ++ [z]) = length (z:zs)           -->     (By 8)
-   length (revese zs) + length [z] = length (z:zs)     -->     (By L1)
+   length (reverse (z:zs)) = length (z:zs)               -->     (By 5)
+   length (revese zs ++ [z]) = length (z:zs)             -->     (By 8)
+   length (revese zs) + length [z] = length (z:zs)       -->     (By L1)
+   length (revese zs) + length (z:[]) = length (z:zs)    -->     (By 11)
+   length (revese zs) + (1 + length []) = length (z:zs)  -->     (By 6)
+   length (revese zs) + (1 + 0) = length (z:zs)          -->     (By 9)
+   length (revese zs) + 1  = length (z:zs)               -->     (By math)
+   1 + length (revese zs) = length (z:zs)                -->     (By associativity of +)
+   1 + length (zs) = length (z:zs)                       -->     (By induction)
+   length (z:zs) = length (z:zs)                         -->     (By 6 backwards)
 
 3) (length . reverse) bottom = length bottom
 
@@ -108,4 +116,8 @@ length (xs ++ ys) = length xs + length ys
    length (x:xs) + length ys = length (x:xs) + length ys   -->     (By 6 backwards)
    
 3) length (bottom ++ ys) = length bottom + length ys
+
+   length bottom  = length bottom + length ys   -->      (By pattern matching)
+   length bottom  = length bottom               -->      (By pattern matching)
+
 -}
