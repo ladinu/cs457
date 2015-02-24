@@ -8,31 +8,45 @@ Consider the following class definition, which is designed to
 characterize the set of types that contain only finitely many
 distinct elements:
 
+> import Prelude hiding (maxBound, minBound)
 > class Finite a where
 >   elements :: [a]
+>   maxBound :: a
+>   minBound :: a
 
 For example, we can certainly enumerate the set of all Bool
 values, so we might declare the following instance:
 
 > instance Finite Bool where
 >   elements = [ False, True ]
+>   maxBound = last elements
+>   minBound = head elements
 
 We can repeat this same idea for other enumerated types:
 
-> data Day     = Sun | Mon | Tue | Wed | Thu | Fri | Sat
+> data Day     = Sun | Mon | Tue | Wed | Thu | Fri | Sat deriving (Show, Eq)
 > data Month   = Jan | Feb | Mar | Apr | May | Jun
->              | Jul | Aug | Sep | Oct | Nov | Dec
-> data Rainbow = Red | Orange | Yellow | Green | Blue | Indigo | Violet
+>              | Jul | Aug | Sep | Oct | Nov | Dec deriving (Show, Eq)
+> data Rainbow = Red | Orange | Yellow | Green | Blue | Indigo | Violet deriving (Show, Eq)
 
 Of course, all of these types are finite:
 
 > instance Finite Day where
 >   elements = [Sun, Mon, Tue, Wed, Thu, Fri, Sat]
+>   maxBound = last elements
+>   minBound = head elements
+
 > instance Finite Month where
 >   elements = [ Jan, Feb, Mar, Apr, May, Jun,
 >                Jul, Aug, Sep, Oct, Nov, Dec]
+>   maxBound = last elements
+>   minBound = head elements
+
 > instance Finite Rainbow where
 >   elements = [Red, Orange, Yellow, Green, Blue, Indigo, Violet]
+>   maxBound = last elements
+>   minBound = head elements
+
 
 As a slightly more interesting example, consider the Maybe datatype
 that is defined in the prelude as follows:
@@ -45,6 +59,8 @@ describes:
 
 > instance Finite a => Finite (Maybe a) where
 >   elements = [ Nothing ] ++ [ Just x | x <- elements ]
+>   maxBound = last elements
+>   minBound = head elements
 
 A critical property that we would like to hold for each instance t of
 Finite is that any element x of type t will appear in the corresponding
@@ -81,6 +97,11 @@ some random tests.  [Note that a finite type can still have many
 elements; you might want to think carefully about how you write your
 instance definitions, especially the one for Int, to ensure that
 testing does not take too long!]
+
+> instance Finite Int where
+>   elements = [0, 1 .. 100]
+>   maxBound = last elements
+>   minBound = head elements
 
 2) If a is a Finite type, then we can use elements :: [a] to obtain
 the list of all values in the domain of a function of type a -> b.
