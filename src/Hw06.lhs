@@ -103,6 +103,16 @@ testing does not take too long!]
 >   maxBound = last elements
 >   minBound = head elements
 
+> instance (Finite a, Finite b) => Finite (a, b) where
+>   elements = [ (x, y) | x <- elements, y <- elements]
+>   maxBound = last elements
+>   minBound = head elements
+
+> instance Finite (Either a b) where
+>   elements = [x | Left x <- elements ] ++ [y | Right y <- elements]
+>   maxBound = last elements
+>   minBound = head elements
+
 2) If a is a Finite type, then we can use elements :: [a] to obtain
 the list of all values in the domain of a function of type a -> b.
 Use this observation to define the following instances for displaying
